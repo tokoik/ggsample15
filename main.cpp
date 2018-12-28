@@ -1,52 +1,37 @@
-#include <cmath>
-#include <cstdlib>
+ï»¿//
+// ãƒ¡ã‚¤ãƒ³ãƒ—ãƒ­ã‚°ãƒ©ãƒ 
+//
 
-#include "gg.h"
+// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒœãƒƒã‚¯ã‚¹ã®è¡¨ç¤ºã®æº–å‚™
+#if defined(_MSC_VER)
+#  include <Windows.h>
+#  include <atlstr.h>  
+#endif
 
-/*
-** ‰æ–Ê•\¦
-*/
-static void display(void)
+// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³æœ¬ä½“
+#include "GgApplication.h"
+
+//
+// ãƒ¡ã‚¤ãƒ³ãƒ—ãƒ­ã‚°ãƒ©ãƒ 
+//
+int main() try
 {
-  // ‰æ–ÊƒNƒŠƒA
-  glClear(GL_COLOR_BUFFER_BIT);
+  // ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³æœ¬ä½“
+  GgApplication app;
 
-  glutSwapBuffers();
+  // ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å®Ÿè¡Œã™ã‚‹
+  app.run();
 }
-
-/*
-** ƒEƒBƒ“ƒhƒE‚ÌƒŠƒTƒCƒY
-*/
-static void resize(int w, int h)
+catch (const std::runtime_error &e)
 {
-  // ƒEƒBƒ“ƒhƒE‘S‘Ì‚ğƒrƒ…[ƒ|[ƒg‚É‚·‚é
-  glViewport(0, 0, w, h);
-}
+  // ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã™ã‚‹
+#if defined(_MSC_VER)
+  MessageBox(NULL, CString(e.what()), TEXT("ã‚²ãƒ¼ãƒ ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ç‰¹è«–"), MB_ICONERROR);
+#else
+  std::cerr << e.what() << "\n\n[Type enter key] ";
+  std::cin.get();
+#endif
 
-/*
-** ‰Šú‰»
-*/
-static void init(void)
-{
-  // ƒQ[ƒ€ƒOƒ‰ƒtƒBƒbƒNƒX“Á˜_‚Ì“s‡‚É‚à‚Æ‚Ã‚­‰Šú‰»
-  gg::ggInit();
-  
-  // ”wŒiF
-  glClearColor(1.0, 1.0, 1.0, 1.0);
-}
-
-/*
-** ƒƒCƒ“ƒvƒƒOƒ‰ƒ€
-*/
-int main(int argc, char *argv[])
-{
-  glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
-  glutCreateWindow("ggsample15");
-  glutDisplayFunc(display);
-  glutReshapeFunc(resize);
-  init();
-  glutMainLoop();
-
-  return 0;
+  // ãƒ–ãƒ­ã‚°ãƒ©ãƒ ã‚’çµ‚äº†ã™ã‚‹
+  return EXIT_FAILURE;
 }
