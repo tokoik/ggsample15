@@ -1,10 +1,10 @@
 ﻿// アプリケーション本体
-#include "GgApplication.h"
+#include "Window.h"
 
 //
 // アプリケーションの実行
 //
-void GgApplication::run()
+void app()
 {
   // ウィンドウを作成する
   Window window("ggsample01");
