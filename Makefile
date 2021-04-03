@@ -2,8 +2,8 @@ TARGET	= ggsample15
 SOURCES	= $(wildcard *.cpp)
 HEADERS	= $(wildcard *.h)
 OBJECTS	= $(patsubst %.cpp,%.o,$(SOURCES))
-CXXFLAGS	= --std=c++11 -g -Wall -DDEBUG -DX11 -Iinclude
-LDLIBS	= -Llib -lglfw3_linux -lGL -lXrandr -lXinerama -lXcursor -lXxf86vm -lXi -lX11 -lpthread -lrt -lm -ldl
+CXXFLAGS	= --std=c++17 -g -Wall -DDEBUG -DX11 -Iinclude
+LDLIBS	= -Llib -lglfw3_linux -lGL -lXrandr -lXinerama -lXcursor -lXi -lX11 -lpthread -lrt -lm -ldl
 
 .PHONY: clean
 
