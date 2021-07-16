@@ -1,5 +1,5 @@
 ﻿//
-// メインプログラム
+// ゲームグラフィックス特論宿題アプリケーション
 //
 
 // MessageBox の準備
@@ -14,22 +14,22 @@
 #endif
 #define HEADER_STR "ゲームグラフィックス特論"
 
-// ウィンドウ関連の処理
-#include "Window.h"
-
-// アプリケーション本体
-extern void app();
+// ゲームグラフィックス特論宿題アプリケーションクラス
+#include "GgApp.h"
 
 //
 // メインプログラム
 //
-int main() try
+int main(int argc, const char* const* argv) try
 {
   // ウィンドウ関連の初期設定
   Window::init(4, 1);
 
-  // アプリケーションの実行
-  app();
+  // アプリケーションのオブジェクトを生成する
+  GgApp app;
+
+  // アプリケーションを実行する
+  return app.main(argc, argv);
 }
 catch (const std::runtime_error &e)
 {

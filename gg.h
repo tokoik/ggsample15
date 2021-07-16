@@ -1325,8 +1325,8 @@ namespace gg
   */
   enum BindingPoints
   {
-    LightBindingPoint = 0,  //!< \brief 光源の uniform buffer object の結合ポイント
-    MaterialBindingPoint,   //!< \brief 材質の uniform buffer object の結合ポイント
+    LightBindingPoint = 0,  //!< \brief 光源の uniform buffer object の結合ポイント.
+    MaterialBindingPoint,   //!< \brief 材質の uniform buffer object の結合ポイント.
   };
 
   /*!
@@ -1589,11 +1589,39 @@ namespace gg
 #endif
 
   /*!
+  ** \brief 3 要素の外積.
+  **
+  **   \param a GLfloat 型の 3 要素の配列変数.
+  **   \param b GLfloat 型の 3 要素の配列変数.
+  **   \param c 結果を格納する GLfloat 型の 3 要素の配列変数.
+  */
+  inline void ggCross(GLfloat* c, const GLfloat* a, const GLfloat* b)
+  {
+    c[0] = a[1] * b[2] - a[2] * b[1];
+    c[1] = a[2] * b[0] - a[0] * b[2];
+    c[2] = a[0] * b[1] - a[1] * b[0];
+  }
+
+  /*!
+  ** \brief 3 要素の内積.
+  **
+  **   \param a GLfloat 型の 3 要素の配列変数.
+  **   \param b GLfloat 型の 3 要素の配列変数.
+  */
+  inline GLfloat ggDot3(const GLfloat* a, const GLfloat* b)
+  {
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  }
+
+  /*!
   ** \brief 3 要素の長さ.
   **
   **   \param a GLfloat 型の 3 要素の配列変数.
   */
-  extern GLfloat ggLength3(const GLfloat* a);
+  inline GLfloat ggLength3(const GLfloat* a)
+  {
+    return sqrtf(ggDot3(a, a));
+  }
 
   /*!
   ** \brief 3 要素の正規化.
@@ -1612,28 +1640,14 @@ namespace gg
   }
 
   /*!
-  ** \brief 3 要素の内積.
+  ** \brief 4 要素の内積
   **
-  **   \param a GLfloat 型の 3 要素の配列変数.
-  **   \param b GLfloat 型の 3 要素の配列変数.
+  **   \param a GLfloat 型の 4 要素の配列変数.
+  **   \param b GLfloat 型の 4 要素の配列変数.
   */
-  inline GLfloat ggDot3(const GLfloat* a, const GLfloat* b)
+  inline GLfloat ggDot4(const GLfloat* a, const GLfloat* b)
   {
-    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-  }
-
-  /*!
-  ** \brief 3 要素の外積.
-  **
-  **   \param a GLfloat 型の 3 要素の配列変数.
-  **   \param b GLfloat 型の 3 要素の配列変数.
-  **   \param c 結果を格納する GLfloat 型の 3 要素の配列変数.
-  */
-  inline void ggCross(GLfloat* c, const GLfloat* a, const GLfloat* b)
-  {
-    c[0] = a[1] * b[2] - a[2] * b[1];
-    c[1] = a[2] * b[0] - a[0] * b[2];
-    c[2] = a[0] * b[1] - a[1] * b[0];
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
   }
 
   /*!
@@ -1641,16 +1655,9 @@ namespace gg
   **
   **   \param a GLfloat 型の 4 要素の配列変数.
   */
-  extern GLfloat ggLength4(const GLfloat* a);
-
-  /*!
-  ** \brief GgVector 型の長さ.
-  **
-  **   \param a GgVector 型の変数.
-  */
-  inline GLfloat ggLength4(const GgVector& a)
+  inline GLfloat ggLength4(const GLfloat* a)
   {
-    return ggLength4(a.data());
+    return sqrtf(ggDot4(a, a));
   }
 
   /*!
@@ -1671,38 +1678,385 @@ namespace gg
   }
 
   /*!
-  ** \brief GgVector 型の正規化.
-  **
-  **   \param a GgVector 型の変数
-  */
-  inline void ggNormalize4(GgVector& a)
-  {
-    const GLfloat l{ ggLength4(a) };
-    if (l > 0.0f)
-    {
-      a[0] /= l;
-      a[1] /= l;
-      a[2] /= l;
-      a[3] /= l;
-    }
-  }
-
-  /*!
-  ** \brief 4 要素の内積
-  **
-  **   \param a GLfloat 型の 4 要素の配列変数.
-  **   \param b GLfloat 型の 4 要素の配列変数.
-  */
-  inline GLfloat ggDot4(const GLfloat* a, const GLfloat* b)
-  {
-    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
-  }
-
-  /*!
-  ** \brief GgVector 型の内積
+  ** \brief GgVector 型の和を返す.
   **
   **   \param a GgVector 型の変数.
   **   \param b GgVector 型の変数.
+  **   \return a の各要素と b の各要素の要素ごとの和.
+  */
+  inline GgVector operator+(const GgVector& a, const GgVector& b)
+  {
+    return GgVector{ a[0] + b[0], a[1] + b[1], a[2] + b[2], a[3] + b[3] };
+  }
+
+  /*!
+  ** \brief GgVector 型を加算する.
+  **
+  **   \param a GgVector 型の変数.
+  **   \param b GgVector 型の変数.
+  **   \return a の各要素に b の各要素をそれぞれ加算した a の参照.
+  */
+  inline GgVector& operator+=(GgVector& a, const GgVector& b)
+  {
+    a[0] += b[0];
+    a[1] += b[1];
+    a[2] += b[2];
+    a[3] += b[3];
+
+    return a;
+  }
+
+  /*!
+  ** \brief GgVector 型の差を返す.
+  **
+  **   \param a GgVector 型の変数.
+  **   \param b GgVector 型の変数.
+  **   \return a の各要素から b の各要素を要素ごとに引いた結果.
+  */
+  inline GgVector operator-(const GgVector& a, const GgVector& b)
+  {
+    return GgVector{ a[0] - b[0], a[1] - b[1], a[2] - b[2], a[3] - b[3] };
+  }
+
+  /*!
+  ** \brief GgVector 型を減算する.
+  **
+  **   \param a GgVector 型の変数.
+  **   \param b GgVector 型の変数.
+  **   \return a の各要素から b の各要素をそれぞれ減算した a の参照.
+  */
+  inline GgVector& operator-=(GgVector& a, const GgVector& b)
+  {
+    a[0] -= b[0];
+    a[1] -= b[1];
+    a[2] -= b[2];
+    a[3] -= b[3];
+
+    return a;
+  }
+
+  /*!
+  ** \brief GgVector 型の積を返す.
+  **
+  **   \param a GgVector 型の変数.
+  **   \param b GgVector 型の変数.
+  **   \return a の各要素と b の各要素の要素ごとの積.
+  */
+  inline GgVector operator*(const GgVector& a, const GgVector& b)
+  {
+    return GgVector{ a[0] * b[0], a[1] * b[1], a[2] * b[2], a[3] * b[3] };
+  }
+
+  /*!
+  ** \brief GgVector 型を乗算する.
+  **
+  **   \param a GgVector 型の変数.
+  **   \param b GgVector 型の変数.
+  **   \return a の各要素に b の各要素をそれぞれ乗算した a の参照.
+  */
+  inline GgVector& operator*=(GgVector& a, const GgVector& b)
+  {
+    a[0] *= b[0];
+    a[1] *= b[1];
+    a[2] *= b[2];
+    a[3] *= b[3];
+
+    return a;
+  }
+
+  /*!
+  ** \brief GgVector 型の商を返す.
+  **
+  **   \param a GgVector 型の変数.
+  **   \param b GgVector 型の変数.
+  **   \return a の各要素を b の各要素で要素ごとに割った結果.
+  */
+  inline GgVector operator/(const GgVector& a, const GgVector& b)
+  {
+    return GgVector{ a[0] / b[0], a[1] / b[1], a[2] / b[2], a[3] / b[3] };
+  }
+
+  /*!
+  ** \brief GgVector 型を除算する.
+  **
+  **   \param a GgVector 型の変数.
+  **   \param b GgVector 型の変数.
+  **   \return a の各要素を b の各要素でそれぞれ割った a の参照.
+  */
+  inline GgVector& operator/=(GgVector& a, const GgVector& b)
+  {
+    a[0] /= b[0];
+    a[1] /= b[1];
+    a[2] /= b[2];
+    a[3] /= b[3];
+
+    return a;
+  }
+
+  /*!
+  ** \brief GgVector 型の各要素にスカラーを足した和を返す.
+  **
+  **   \param a GgVector 型の変数.
+  **   \param b GLfloat 型の変数.
+  **   \return a の各要素に b を足した和.
+  */
+  inline GgVector operator+(const GgVector& a, GLfloat b)
+  {
+    return GgVector{ a[0] + b, a[1] + b, a[2] + b, a[3] + b };
+  }
+
+  /*!
+  ** \brief GgVector 型の各要素にスカラーを足した和を返す.
+  **
+  **   \param b GLfloat 型の変数.
+  **   \param a GgVector 型の変数.
+  **   \return a に b の各要素を足した和.
+  */
+  inline GgVector operator+(GLfloat a, const GgVector& b)
+  {
+    return GgVector{ a + b[0], a + b[1], a + b[2], a + b[3] };
+  }
+
+  /*!
+  ** \brief GgVector 型の各要素にスカラーを足す.
+  **
+  **   \param a GgVector 型の変数.
+  **   \param b GLfloat 型の変数.
+  **   \return a の各要素に b を足した a の参照.
+  */
+  inline GgVector& operator+=(GgVector& a, GLfloat b)
+  {
+    a[0] += b;
+    a[1] += b;
+    a[2] += b;
+    a[3] += b;
+
+    return a;
+  }
+
+  /*!
+  ** \brief GgVector 型の各要素からスカラーを引いた差を返す.
+  **
+  **   \param a GgVector 型の変数.
+  **   \param b GLfloat 型の変数.
+  **   \return a の各要素から b を引いた差.
+  */
+  inline GgVector operator-(const GgVector& a, GLfloat b)
+  {
+    return GgVector{ a[0] - b, a[1] - b, a[2] - b, a[3] - b };
+  }
+
+  /*!
+  ** \brief スカラーから GgVector 型の各要素を引いた差を返す.
+  **
+  **   \param b GLfloat 型の変数.
+  **   \param a GgVector 型の変数.
+  **   \return a から b の各要素を引いた差.
+  */
+  inline GgVector operator-(GLfloat a, const GgVector& b)
+  {
+    return GgVector{ a - b[0], a - b[1], a - b[2], a - b[3] };
+  }
+
+  /*!
+  ** \brief GgVector 型の各要素からスカラーを引く.
+  **
+  **   \param a GgVector 型の変数.
+  **   \param b GLfloat 型の変数.
+  **   \return a の各要素から b を引いた a の参照.
+  */
+  inline GgVector& operator-=(GgVector& a, GLfloat b)
+  {
+    a[0] -= b;
+    a[1] -= b;
+    a[2] -= b;
+    a[3] -= b;
+
+    return a;
+  }
+
+  /*!
+  ** \brief GgVector 型の各要素にスカラーを乗じた積を返す.
+  **
+  **   \param a GgVector 型の変数.
+  **   \param b GLfloat 型の変数.
+  **   \return a の各要素に b を乗じた積.
+  */
+  inline GgVector operator*(const GgVector& a, GLfloat b)
+  {
+    return GgVector{ a[0] * b, a[1] * b, a[2] * b, a[3] * b };
+  }
+
+  /*!
+  ** \brief GgVector 型の各要素にスカラーを乗じた積を返す.
+  **
+  **   \param b GLfloat 型の変数.
+  **   \param a GgVector 型の変数.
+  **   \return a に b の各要素を乗じた積.
+  */
+  inline GgVector operator*(GLfloat a, const GgVector& b)
+  {
+    return GgVector{ a * b[0], a * b[1], a * b[2], a * b[3] };
+  }
+
+  /*!
+  ** \brief GgVector 型の各要素にスカラーを乗じる.
+  **
+  **   \param a GgVector 型の変数.
+  **   \param b GLfloat 型の変数.
+  **   \return a の各要素に b を乗じた a の参照.
+  */
+  inline GgVector& operator*=(GgVector& a, GLfloat b)
+  {
+    a[0] *= b;
+    a[1] *= b;
+    a[2] *= b;
+    a[3] *= b;
+
+    return a;
+  }
+
+  /*!
+  ** \brief GgVector 型の各要素をスカラーで割った商を返す.
+  **
+  **   \param a GgVector 型の変数.
+  **   \param b GLfloat 型の変数.
+  **   \return a の各要素を b で割った商.
+  */
+  inline GgVector operator/(const GgVector& a, GLfloat b)
+  {
+    return GgVector{ a[0] / b, a[1] / b, a[2] / b, a[3] / b };
+  }
+
+  /*!
+  ** \brief スカラーを GgVector 型の各要素で割った商を返す.
+  **
+  **   \param b GLfloat 型の変数.
+  **   \param a GgVector 型の変数.
+  **   \return a を b の各要素で割った商.
+  */
+  inline GgVector operator/(GLfloat a, const GgVector& b)
+  {
+    return GgVector{ a / b[0], a / b[1], a / b[2], a / b[3] };
+  }
+
+  /*!
+  ** \brief GgVector 型の各要素をスカラーで割る.
+  **
+  **   \param a GgVector 型の変数.
+  **   \param b GLfloat 型の変数.
+  **   \return a の各要素を b で割った a の参照.
+  */
+  inline GgVector& operator/=(GgVector& a, GLfloat b)
+  {
+    a[0] /= b;
+    a[1] /= b;
+    a[2] /= b;
+    a[3] /= b;
+
+    return a;
+  }
+
+  /*!
+  ** \brief GgVector 型の 3 要素の内積.
+  **
+  **   \param a GgVector 型の変数.
+  **   \param b GgVector 型の変数.
+  **   \return a と b のそれぞれの 3 要素の内積.
+  */
+  inline GLfloat ggDot3(const GgVector& a, const GgVector& b)
+  {
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  }
+
+  /*!
+  ** \brief GgVector 型の 3 要素の外積.
+  **
+  **   \param a GgVector 型の変数.
+  **   \param b GgVector 型の変数.
+  **   \return a と b の外積.
+  **   \note 戻り値の w (第4) 要素は 0.
+  */
+  inline GgVector ggCross(const GgVector& a, const GgVector& b)
+  {
+    const GgVector c
+    {
+      a[1] * b[2] - a[2] * b[1],
+      a[2] * b[0] - a[0] * b[2],
+      a[0] * b[1] - a[1] * b[0],
+      0.0f
+    };
+
+    return c;
+  }
+
+  /*!
+  ** \brief GgVector 型の 3 要素の長さ.
+  **
+  **   \param a GgVector 型の変数.
+  **   \return a の長さ.
+  */
+  inline GLfloat ggLength3(const GgVector& a)
+  {
+    return sqrtf(ggDot3(a, a));
+  }
+
+  /*!
+  ** \brief GgVector 型の 3 要素の距離.
+  **
+  **   \param a GgVector 型の変数.
+  **   \param b GgVector 型の変数.
+  **   \return 2 つの GgVector a, b の 3 要素の距離.
+  */
+  inline GLfloat ggDistance3(const GgVector& a, const GgVector& b)
+  {
+    return ggLength3(a - b);
+  }
+
+  /*!
+  ** \brief GgVector 型の 3 要素の正規化.
+  **
+  **   \param a GgVector 型の変数のポインタ.
+  **   \return 正規化できなかったら false.
+  **   \note a の w (第4) 要素は 0 になる.
+  */
+  inline bool ggNormalize3(GgVector* a)
+  {
+    const GLfloat l{ ggLength3(*a) };
+
+    if (l > 0.0f)
+    {
+      (*a)[0] /= l;
+      (*a)[1] /= l;
+      (*a)[2] /= l;
+      (*a)[3] = 0.0f;
+
+      return true;
+    }
+
+    return false;
+  }
+
+  /*!
+  ** \brief GgVector 型の 3 要素の正規化.
+  **
+  **   \param a GgVector 型の変数.
+  **   \return a の 3 要素を正規化したもの.
+  **   \note 戻り値の w (第4) 要素は 0 になる. 正規化できなければ元の値を返す.
+  */
+  inline GgVector ggNormalize3(const GgVector& a)
+  {
+    GgVector b{ a };
+    ggNormalize3(&b);
+    return b;
+  }
+
+  /*!
+  ** \brief GgVector の 4 要素の内積.
+  **
+  **   \param a GgVector 型の変数.
+  **   \param b GgVector 型の変数.
+  **   \return a と b のそれぞれの 4 要素の内積.
   */
   inline GLfloat ggDot4(const GgVector& a, const GgVector& b)
   {
@@ -1710,13 +2064,69 @@ namespace gg
   }
 
   /*!
+  ** \brief GgVector 型の長さ.
+  **
+  **   \param a GgVector 型の変数.
+  **   \return a の長さ.
+  */
+  inline GLfloat ggLength4(const GgVector& a)
+  {
+    return sqrtf(ggDot4(a, a));
+  }
+
+  /*!
+  ** \brief GgVector 型の距離.
+  **
+  **   \param a GgVector 型の変数.
+  **   \param b GgVector 型の変数.
+  **   \return 2 つの GgVector a, b の距離.
+  */
+  inline GLfloat ggDistance4(const GgVector& a, const GgVector& b)
+  {
+    return ggLength4(a - b);
+  }
+
+  /*!
+  ** \brief GgVector 型の正規化.
+  **
+  **   \param a GgVector 型の変数のポインタ.
+  **   \return 正規化できなかったら false.
+  */
+  inline bool ggNormalize4(GgVector* a)
+  {
+    const GLfloat l{ ggLength4(*a) };
+
+    if (l > 0.0f)
+    {
+      (*a)[0] /= l;
+      (*a)[1] /= l;
+      (*a)[2] /= l;
+      (*a)[3] /= l;
+
+      return true;
+    }
+
+    return false;
+  }
+
+  /*!
+  ** \brief GgVector 型の正規化.
+  **
+  **   \param a GgVector 型の変数.
+  **   \return a の 4 要素を正規化したもの.
+  */
+  inline GgVector ggNormalize4(const GgVector& a)
+  {
+    GgVector b{ a };
+    ggNormalize4(&b);
+    return b;
+  }
+
+  /*!
   ** \brief 変換行列.
   */
-  class GgMatrix
+  class GgMatrix : public std::array<GLfloat, 16>
   {
-    // 変換行列の要素
-    std::array<GLfloat, 16> array;
-
     // 行列 a とベクトル b の積をベクトル c に代入する
     void projection(GLfloat* c, const GLfloat* a, const GLfloat* b) const;
 
@@ -1757,7 +2167,7 @@ namespace gg
     //!   \return a を代入した GgMatrix 型の値.
     inline GgMatrix& load(const GLfloat* a)
     {
-      std::copy(a, a + 16, array.data());
+      std::copy(a, a + 16, data());
       return *this;
     }
 
@@ -1766,7 +2176,7 @@ namespace gg
     //!   \return m を代入した GgMatrix 型の値.
     inline GgMatrix& load(const GgMatrix& m)
     {
-      return load(m.array.data());
+      return load(m.data());
     }
 
     //! \brief 変換行列に配列に格納した変換行列を加算した結果を格納する.
@@ -1774,7 +2184,7 @@ namespace gg
     //!   \return 変換行列に a を加えた GgMatrix 型の値.
     inline GgMatrix& loadAdd(const GLfloat* a)
     {
-      for (int i = 0; i < 16; ++i) array[i] += a[i];
+      for (int i = 0; i < 16; ++i) (*this)[i] += a[i];
       return *this;
     }
 
@@ -1783,7 +2193,7 @@ namespace gg
     //!   \return 変換行列に m を加えた GgMatrix 型の値.
     inline GgMatrix& loadAdd(const GgMatrix& m)
     {
-      return loadAdd(m.array.data());
+      return loadAdd(m.data());
     }
 
     //! \brief 変換行列から配列に格納した変換行列を減算した結果を格納する.
@@ -1791,7 +2201,7 @@ namespace gg
     //!   \return 変換行列に a を引いた GgMatrix 型の値.
     inline GgMatrix& loadSubtract(const GLfloat* a)
     {
-      for (int i = 0; i < 16; ++i) array[i] -= a[i];
+      for (int i = 0; i < 16; ++i) (*this)[i] -= a[i];
       return *this;
     }
 
@@ -1800,7 +2210,7 @@ namespace gg
     //!   \return 変換行列に m を引いた GgMatrix 型の値.
     inline GgMatrix& loadSubtract(const GgMatrix& m)
     {
-      return loadSubtract(m.array.data());
+      return loadSubtract(m.data());
     }
 
     //! \brief 変換行列に配列に格納した変換行列を乗算した結果を格納する.
@@ -1816,7 +2226,7 @@ namespace gg
     //!   \return 変換行列に m を掛けた GgMatrix 型の値.
     inline GgMatrix& loadMultiply(const GgMatrix& m)
     {
-      return loadMultiply(m.array.data());
+      return loadMultiply(m.data());
     }
 
     //! \brief 変換行列を配列に格納した変換行列で除算した結果を格納する.
@@ -1832,7 +2242,7 @@ namespace gg
     //!   \return 変換行列に m を乗じた GgMatrix 型の値.
     inline GgMatrix& loadDivide(const GgMatrix& m)
     {
-      return loadDivide(m.array.data());
+      return loadDivide(m.data());
     }
 
     //! \brief 変換行列に配列に格納した変換行列を加算した値を返す.
@@ -1849,7 +2259,7 @@ namespace gg
     //!   \return 変換行列に m を加えた GgMatrix 型の値.
     inline GgMatrix add(const GgMatrix& m) const
     {
-      return add(m.array.data());
+      return add(m.data());
     }
 
     //! \brief 変換行列から配列に格納した変換行列を減算した値を返す.
@@ -1866,7 +2276,7 @@ namespace gg
     //!   \return 変換行列に m を引いた GgMatrix 型の値.
     inline GgMatrix subtract(const GgMatrix& m) const
     {
-      return subtract(m.array.data());
+      return subtract(m.data());
     }
 
     //! \brief 変換行列に配列に格納した変換行列を乗算した値を返す.
@@ -1875,7 +2285,7 @@ namespace gg
     inline GgMatrix multiply(const GLfloat* a) const
     {
       GgMatrix t;
-      multiply(t.array.data(), array.data(), a);
+      multiply(t.data(), data(), a);
       return t;
     }
 
@@ -1884,7 +2294,7 @@ namespace gg
     //!   \return 変換行列に m を掛けた GgMatrix 型の値.
     inline GgMatrix multiply(const GgMatrix& m) const
     {
-      return multiply(m.array.data());
+      return multiply(m.data());
     }
 
     //! \brief 変換行列を配列に格納した変換行列で除算した値を返す.
@@ -1894,7 +2304,7 @@ namespace gg
     {
       GgMatrix t, ia;
       ia.loadInvert(a);
-      multiply(t.array.data(), array.data(), ia.array.data());
+      multiply(t.data(), data(), ia.data());
       return t;
     }
 
@@ -1903,7 +2313,7 @@ namespace gg
     //!   \return 変換行列を m で割った GgMatrix 型の値.
     inline GgMatrix divide(const GgMatrix& m) const
     {
-      return divide(m.array.data());
+      return divide(m.data());
     }
 
     // 演算子
@@ -1913,7 +2323,7 @@ namespace gg
     }
     inline GgMatrix& operator=(const GgMatrix& m)
     {
-      return operator=(m.array.data());
+      return operator=(m.data());
     }
     inline GgMatrix& operator+=(const GLfloat* a)
     {
@@ -1921,7 +2331,7 @@ namespace gg
     }
     inline GgMatrix& operator+=(const GgMatrix& m)
     {
-      return operator+=(m.array.data());
+      return operator+=(m.data());
     }
     inline GgMatrix& operator-=(const GLfloat* a)
     {
@@ -1929,7 +2339,7 @@ namespace gg
     }
     inline GgMatrix& operator-=(const GgMatrix& m)
     {
-      return operator-=(m.array.data());
+      return operator-=(m.data());
     }
     inline GgMatrix& operator*=(const GLfloat* a)
     {
@@ -1937,7 +2347,7 @@ namespace gg
     }
     inline GgMatrix& operator*=(const GgMatrix& m)
     {
-      return operator*=(m.array.data());
+      return operator*=(m.data());
     }
     inline GgMatrix& operator/=(const GLfloat* a)
     {
@@ -1945,7 +2355,7 @@ namespace gg
     }
     inline GgMatrix& operator/=(const GgMatrix& m)
     {
-      return operator/=(m.array.data());
+      return operator/=(m.data());
     }
     inline GgMatrix operator+(const GLfloat* a) const
     {
@@ -1953,7 +2363,7 @@ namespace gg
     }
     inline GgMatrix operator+(const GgMatrix& m) const
     {
-      return operator+(m.array.data());
+      return operator+(m.data());
     }
     inline GgMatrix operator-(const GLfloat* a) const
     {
@@ -1961,7 +2371,7 @@ namespace gg
     }
     inline GgMatrix operator-(const GgMatrix& m) const
     {
-      return operator-(m.array.data());
+      return operator-(m.data());
     }
     inline GgMatrix operator*(const GLfloat* a) const
     {
@@ -1969,7 +2379,7 @@ namespace gg
     }
     inline GgMatrix operator*(const GgMatrix& m) const
     {
-      return operator*(m.array.data());
+      return operator*(m.data());
     }
     inline GgMatrix operator/(const GLfloat* a) const
     {
@@ -1977,7 +2387,7 @@ namespace gg
     }
     inline GgMatrix operator/(const GgMatrix& m) const
     {
-      return operator/(m.array.data());
+      return operator/(m.data());
     }
 
     //! \brief 単位行列を格納する.
@@ -2166,7 +2576,7 @@ namespace gg
     //!   \return 設定した m の転置行列.
     inline GgMatrix& loadTranspose(const GgMatrix& m)
     {
-      return loadTranspose(m.array.data());
+      return loadTranspose(m.data());
     }
 
     //! \brief 逆行列を格納する.
@@ -2179,7 +2589,7 @@ namespace gg
     //!   \return 設定した m の逆行列.
     inline GgMatrix& loadInvert(const GgMatrix& m)
     {
-      return loadInvert(m.array.data());
+      return loadInvert(m.data());
     }
 
     //! \brief 法線変換行列を格納する.
@@ -2192,7 +2602,7 @@ namespace gg
     //!   \return 設定した m の法線変換行列.
     inline GgMatrix& loadNormal(const GgMatrix& m)
     {
-      return loadNormal(m.array.data());
+      return loadNormal(m.data());
     }
 
     //! \brief 平行移動変換を乗じた結果を返す.
@@ -2445,7 +2855,7 @@ namespace gg
     //!   \param v 元のベクトルの GLfloat 型の 4 要素の配列変数.
     inline void projection(GLfloat* c, const GLfloat* v) const
     {
-      projection(c, array.data(), v);
+      projection(c, data(), v);
     }
 
     //! \brief ベクトルに対して投影変換を行う.
@@ -2486,40 +2896,19 @@ namespace gg
     //!   \return 変換行列を格納した GLfloat 型の 16 要素の配列変数.
     inline const GLfloat* get() const
     {
-      return array.data();
+      return data();
     }
 
     //! \brief 変換行列を取り出す.
     //!   \param a 変換行列を格納する GLfloat 型の 16 要素の配列変数.
     inline void get(GLfloat* a) const
     {
-      std::copy(array.data(), array.data() + 16, a);
-    }
-
-    //! \brief 変換行列の要素を取り出す.
-    //!   \return 変換行列を格納した GLfloat 型の 16 要素の配列変数 の i 番目の要素.
-    inline const GLfloat& get(int i) const
-    {
-      return array[i];
-    }
-
-    //! \brief 変換行列の要素にアクセスする.
-    //!   \return 変換行列を格納した GLfloat 型の 16 要素の配列変数 の i 番目の要素の参照.
-    inline const GLfloat& operator[](std::size_t i) const
-    {
-      return array[i];
-    }
-
-    //! \brief 変換行列の要素にアクセスする.
-    //!   \return 変換行列を格納した GLfloat 型の 16 要素の配列変数 の i 番目の要素の参照.
-    inline GLfloat& operator[](std::size_t i)
-    {
-      return array[i];
+      std::copy(data(), data() + 16, a);
     }
   };
 
   //! \brief 単位行列を返す.
-  //!   \return 単位行列
+  //!   \return 単位行列.
   inline GgMatrix ggIdentity()
   {
     GgMatrix t;
@@ -2540,7 +2929,7 @@ namespace gg
 
   //! \brief 平行移動の変換行列を返す.
   //!   \param t 移動量の GLfloat 型の 3 要素の配列変数 (x, y, z).
-  //!   \return 平行移動の変換行列
+  //!   \return 平行移動の変換行列.
   inline GgMatrix ggTranslate(const GLfloat* t)
   {
     GgMatrix m;
@@ -2549,7 +2938,7 @@ namespace gg
 
   //! \brief 平行移動の変換行列を返す.
   //!   \param t 移動量の GgVector 型の変数.
-  //!   \return 平行移動の変換行列
+  //!   \return 平行移動の変換行列.
   inline GgMatrix ggTranslate(const GgVector& t)
   {
     GgMatrix m;
@@ -2790,11 +3179,8 @@ namespace gg
   /*!
   ** \brief 四元数.
   */
-  class GgQuaternion
+  class GgQuaternion : public GgVector
   {
-    // 四元数の要素
-    GgVector quaternion;
-
     // GgQuaternion 型の四元数 p と四元数 q の積を四元数 r に求める
     void multiply(GLfloat* r, const GLfloat* p, const GLfloat* q) const;
 
@@ -2825,17 +3211,17 @@ namespace gg
     }
 
     //! \brief コンストラクタ.
-    //!   \param v 四元数を格納した GgVector 型の変数.
-    GgQuaternion(const GgVector& v)
-    {
-      load(v);
-    }
-
-    //! \brief コンストラクタ.
     //!   \param a 四元数を格納した GLfloat 型の 4 要素の配列変数.
     GgQuaternion(const GLfloat* a)
     {
       load(a);
+    }
+
+    //! \brief コンストラクタ.
+    //!   \param v 四元数を格納した GgVector 型の変数.
+    GgQuaternion(const GgVector& v)
+    {
+      load(v);
     }
 
     //! \brief コピーコンストラクタ.
@@ -2854,7 +3240,7 @@ namespace gg
     //!   \return 四元数のノルム.
     inline GLfloat norm() const
     {
-      return ggLength4(quaternion.data());
+      return ggLength4(*this);
     }
 
     //! \brief 四元数を格納する.
@@ -2865,19 +3251,10 @@ namespace gg
     //!   \return 設定した四元数.
     inline GgQuaternion& load(GLfloat x, GLfloat y, GLfloat z, GLfloat w)
     {
-      quaternion[0] = x;
-      quaternion[1] = y;
-      quaternion[2] = z;
-      quaternion[3] = w;
-      return *this;
-    }
-
-    //! \brief 四元数を格納する.
-    //!   \param v 四元数を格納した GgVector 型の変数.
-    //!   \return 設定した四元数.
-    inline GgQuaternion& load(const GgVector& v)
-    {
-      quaternion = v;
+      (*this)[0] = x;
+      (*this)[1] = y;
+      (*this)[2] = z;
+      (*this)[3] = w;
       return *this;
     }
 
@@ -2890,11 +3267,21 @@ namespace gg
     }
 
     //! \brief 四元数を格納する.
+    //!   \param v 四元数を格納した GgVector 型の変数.
+    //!   \return 設定した四元数.
+    inline GgQuaternion& load(const GgVector& v)
+    {
+      *static_cast<GgVector*>(this) = v;
+      return *this;
+    }
+
+    //! \brief 四元数を格納する.
     //!   \param q GgQuaternion 型の四元数.
     //!   \return 設定した四元数.
     inline GgQuaternion& load(const GgQuaternion& q)
     {
-      return load(q.quaternion);
+      *this = q;
+      return *this;
     }
 
     //! \brief 四元数に別の四元数を加算した結果を格納する.
@@ -2905,19 +3292,11 @@ namespace gg
     //!   \return (x, y, z, w) を加えた四元数.
     inline GgQuaternion& loadAdd(GLfloat x, GLfloat y, GLfloat z, GLfloat w)
     {
-      quaternion[0] += x;
-      quaternion[1] += y;
-      quaternion[2] += z;
-      quaternion[3] += w;
+      (*this)[0] += x;
+      (*this)[1] += y;
+      (*this)[2] += z;
+      (*this)[3] += w;
       return *this;
-    }
-
-    //! \brief 四元数に別の四元数を加算した結果を格納する.
-    //!   \param v 四元数を格納した GgVector 型の変数.
-    //!   \return v を加えた四元数.
-    inline GgQuaternion& loadAdd(const GgVector& v)
-    {
-      return loadAdd(v[0], v[1], v[2], v[3]);
     }
 
     //! \brief 四元数に別の四元数を加算した結果を格納する.
@@ -2929,11 +3308,19 @@ namespace gg
     }
 
     //! \brief 四元数に別の四元数を加算した結果を格納する.
+    //!   \param v 四元数を格納した GgVector 型の変数.
+    //!   \return v を加えた四元数.
+    inline GgQuaternion& loadAdd(const GgVector& v)
+    {
+      return loadAdd(v[0], v[1], v[2], v[3]);
+    }
+
+    //! \brief 四元数に別の四元数を加算した結果を格納する.
     //!   \param q GgQuaternion 型の四元数.
     //!   \return q を加えた四元数.
     inline GgQuaternion& loadAdd(const GgQuaternion& q)
     {
-      return loadAdd(q.quaternion);
+      return loadAdd(q[0], q[1], q[2], q[3]);
     }
 
     //! \brief 四元数から別の四元数を減算した結果を格納する.
@@ -2944,19 +3331,11 @@ namespace gg
     //!   \return (x, y, z, w) を引いた四元数.
     inline GgQuaternion& loadSubtract(GLfloat x, GLfloat y, GLfloat z, GLfloat w)
     {
-      quaternion[0] -= x;
-      quaternion[1] -= y;
-      quaternion[2] -= z;
-      quaternion[3] -= w;
+      (*this)[0] -= x;
+      (*this)[1] -= y;
+      (*this)[2] -= z;
+      (*this)[3] -= w;
       return *this;
-    }
-
-    //! \brief 四元数から別の四元数を減算した結果を格納する.
-    //!   \param v 四元数を格納した GgVector 型の変数.
-    //!   \return v を引いた四元数.
-    inline GgQuaternion& loadSubtract(const GgVector& v)
-    {
-      return loadSubtract(v[0], v[1], v[2], v[3]);
     }
 
     //! \brief 四元数から別の四元数を減算した結果を格納する.
@@ -2968,11 +3347,19 @@ namespace gg
     }
 
     //! \brief 四元数から別の四元数を減算した結果を格納する.
+    //!   \param v 四元数を格納した GgVector 型の変数.
+    //!   \return v を引いた四元数.
+    inline GgQuaternion& loadSubtract(const GgVector& v)
+    {
+      return loadSubtract(v[0], v[1], v[2], v[3]);
+    }
+
+    //! \brief 四元数から別の四元数を減算した結果を格納する.
     //!   \param q GgQuaternion 型の四元数.
     //!   \return q を引いた四元数.
     inline GgQuaternion& loadSubtract(const GgQuaternion& q)
     {
-      return loadSubtract(q.quaternion);
+      return loadSubtract(q[0], q[1], q[2], q[3]);
     }
 
     //! \brief 四元数に別の四元数を乗算した結果を格納する.
@@ -2988,14 +3375,6 @@ namespace gg
     }
 
     //! \brief 四元数に別の四元数を乗算した結果を格納する.
-    //!   \param v 四元数を格納した GgVector 型の変数.
-    //!   \return v を乗じた四元数.
-    inline GgQuaternion& loadMultiply(const GgVector& v)
-    {
-      return loadMultiply(v.data());
-    }
-
-    //! \brief 四元数に別の四元数を乗算した結果を格納する.
     //!   \param a 四元数を格納した GLfloat 型の 4 要素の配列変数.
     //!   \return a を乗じた四元数.
     inline GgQuaternion& loadMultiply(const GLfloat* a)
@@ -3004,11 +3383,19 @@ namespace gg
     }
 
     //! \brief 四元数に別の四元数を乗算した結果を格納する.
+    //!   \param v 四元数を格納した GgVector 型の変数.
+    //!   \return v を乗じた四元数.
+    inline GgQuaternion& loadMultiply(const GgVector& v)
+    {
+      return loadMultiply(v.data());
+    }
+
+    //! \brief 四元数に別の四元数を乗算した結果を格納する.
     //!   \param q GgQuaternion 型の四元数.
     //!   \return q を乗じた四元数.
     inline GgQuaternion& loadMultiply(const GgQuaternion& q)
     {
-      return loadMultiply(q.quaternion);
+      return loadMultiply(q.data());
     }
 
     //! \brief 四元を別の四元数で除算した結果を格納する.
@@ -3024,14 +3411,6 @@ namespace gg
     }
 
     //! \brief 四元を別の四元数で除算した結果を格納する.
-    //!   \param v 四元数を格納した GgVector 型の変数.
-    //!   \return v で割った四元数.
-    inline GgQuaternion& loadDivide(const GgVector& v)
-    {
-      return loadDivide(v.data());
-    }
-
-    //! \brief 四元を別の四元数で除算した結果を格納する.
     //!   \param a 四元数を格納した GLfloat 型の 4 要素の配列変数.
     //!   \return a で割った四元数.
     inline GgQuaternion& loadDivide(const GLfloat* a)
@@ -3040,11 +3419,19 @@ namespace gg
     }
 
     //! \brief 四元を別の四元数で除算した結果を格納する.
+    //!   \param v 四元数を格納した GgVector 型の変数.
+    //!   \return v で割った四元数.
+    inline GgQuaternion& loadDivide(const GgVector& v)
+    {
+      return loadDivide(v.data());
+    }
+
+    //! \brief 四元を別の四元数で除算した結果を格納する.
     //!   \param q GgQuaternion 型の四元数.
     //!   \return q で割った四元数.
     inline GgQuaternion& loadDivide(const GgQuaternion& q)
     {
-      return loadDivide(q.quaternion);
+      return loadDivide(q.data());
     }
 
     //! \brief 四元数に別の四元数を加算した結果を返す.
@@ -3055,20 +3442,8 @@ namespace gg
     //!   \return (x, y, z, w) を加えた四元数.
     inline GgQuaternion add(GLfloat x, GLfloat y, GLfloat z, GLfloat w) const
     {
-      GgQuaternion s;
-      s.quaternion[0] = quaternion[0] + x;
-      s.quaternion[1] = quaternion[1] + y;
-      s.quaternion[2] = quaternion[2] + z;
-      s.quaternion[3] = quaternion[3] + w;
-      return s;
-    }
-
-    //! \brief 四元数に別の四元数を加算した結果を返す.
-    //!   \param v 四元数を格納した GgVector 型の変数.
-    //!   \return v を加えた四元数.
-    inline GgQuaternion add(const GgVector& v) const
-    {
-      return add(v[0], v[1], v[2], v[3]);
+      GgQuaternion s{ *this };
+      return s.loadAdd(x, y, z, w);
     }
 
     //! \brief 四元数に別の四元数を加算した結果を返す.
@@ -3080,11 +3455,19 @@ namespace gg
     }
 
     //! \brief 四元数に別の四元数を加算した結果を返す.
+    //!   \param v 四元数を格納した GgVector 型の変数.
+    //!   \return v を加えた四元数.
+    inline GgQuaternion add(const GgVector& v) const
+    {
+      return add(v[0], v[1], v[2], v[3]);
+    }
+
+    //! \brief 四元数に別の四元数を加算した結果を返す.
     //!   \param q GgQuaternion 型の四元数.
     //!   \return q を加えた四元数.
     inline GgQuaternion add(const GgQuaternion& q) const
     {
-      return add(q.quaternion);
+      return add(q[0], q[1], q[2], q[3]);
     }
 
     //! \brief 四元数から別の四元数を減算した結果を返す.
@@ -3095,20 +3478,8 @@ namespace gg
     //!   \return (x, y, z, w) を引いた四元数.
     inline GgQuaternion subtract(GLfloat x, GLfloat y, GLfloat z, GLfloat w) const
     {
-      GgQuaternion s;
-      s.quaternion[0] = quaternion[0] - x;
-      s.quaternion[1] = quaternion[1] - y;
-      s.quaternion[2] = quaternion[2] - z;
-      s.quaternion[3] = quaternion[3] - w;
-      return s;
-    }
-
-    //! \brief 四元数から別の四元数を減算した結果を返す.
-    //!   \param v 四元数を格納した GgVector 型の変数.
-    //!   \return v を引いた四元数.
-    inline GgQuaternion subtract(const GgVector& v) const
-    {
-      return subtract(v[0], v[1], v[2], v[3]);
+      GgQuaternion s{ *this };
+      return s.loadSubtract(x, y, z, w);
     }
 
     //! \brief 四元数から別の四元数を減算した結果を返す.
@@ -3120,11 +3491,19 @@ namespace gg
     }
 
     //! \brief 四元数から別の四元数を減算した結果を返す.
+    //!   \param v 四元数を格納した GgVector 型の変数.
+    //!   \return v を引いた四元数.
+    inline GgQuaternion subtract(const GgVector& v) const
+    {
+      return subtract(v[0], v[1], v[2], v[3]);
+    }
+
+    //! \brief 四元数から別の四元数を減算した結果を返す.
     //!   \param q GgQuaternion 型の四元数.
     //!   \return q を引いた四元数.
     inline GgQuaternion subtract(const GgQuaternion& q) const
     {
-      return subtract(q.quaternion);
+      return subtract(q[0], q[1], q[2], q[3]);
     }
 
     //! \brief 四元数に別の四元数を乗算した結果を返す.
@@ -3140,6 +3519,16 @@ namespace gg
     }
 
     //! \brief 四元数に別の四元数を乗算した結果を返す.
+    //!   \param a 四元数を格納した GLfloat 型の 4 要素の配列変数.
+    //!   \return a を掛けた四元数.
+    inline GgQuaternion multiply(const GLfloat* a) const
+    {
+      GgQuaternion s;
+      multiply(s.data(), data(), a);
+      return s;
+    }
+
+    //! \brief 四元数に別の四元数を乗算した結果を返す.
     //!   \param v 四元数を格納した GgVector 型の変数.
     //!   \return v を掛けた四元数.
     inline GgQuaternion multiply(const GgVector& v) const
@@ -3148,21 +3537,11 @@ namespace gg
     }
 
     //! \brief 四元数に別の四元数を乗算した結果を返す.
-    //!   \param a 四元数を格納した GLfloat 型の 4 要素の配列変数.
-    //!   \return a を掛けた四元数.
-    inline GgQuaternion multiply(const GLfloat* a) const
-    {
-      GgQuaternion s;
-      multiply(s.quaternion.data(), quaternion.data(), a);
-      return s;
-    }
-
-    //! \brief 四元数に別の四元数を乗算した結果を返す.
     //!   \param q GgQuaternion 型の四元数.
     //!   \return q を掛けた四元数.
     inline GgQuaternion multiply(const GgQuaternion& q) const
     {
-      return multiply(q.quaternion);
+      return multiply(q.data());
     }
 
     //! \brief 四元数を別の四元数で除算した結果を返す.
@@ -3178,6 +3557,17 @@ namespace gg
     }
 
     //! \brief 四元数を別の四元数で除算した結果を返す.
+    //!   \param a 四元数を格納した GLfloat 型の 4 要素の配列変数.
+    //!   \return a で割った四元数.
+    inline GgQuaternion divide(const GLfloat* a) const
+    {
+      GgQuaternion s, ia;
+      ia.loadInvert(a);
+      multiply(s.data(), data(), ia.data());
+      return s;
+    }
+
+    //! \brief 四元数を別の四元数で除算した結果を返す.
     //!   \param v 四元数を格納した GgVector 型の変数.
     //!   \return v で割った四元数.
     inline GgQuaternion divide(const GgVector& v) const
@@ -3186,22 +3576,11 @@ namespace gg
     }
 
     //! \brief 四元数を別の四元数で除算した結果を返す.
-    //!   \param a 四元数を格納した GLfloat 型の 4 要素の配列変数.
-    //!   \return a で割った四元数.
-    inline GgQuaternion divide(const GLfloat* a) const
-    {
-      GgQuaternion s, ia;
-      ia.loadInvert(a);
-      multiply(s.quaternion.data(), quaternion.data(), ia.quaternion.data());
-      return s;
-    }
-
-    //! \brief 四元数を別の四元数で除算した結果を返す.
     //!   \param q GgQuaternion 型の四元数.
     //!   \return q で割った四元数.
     inline GgQuaternion divide(const GgQuaternion& q) const
     {
-      return divide(q.quaternion);
+      return divide(q.data());
     }
 
     // 演算子
@@ -3209,73 +3588,105 @@ namespace gg
     {
       return load(a);
     }
-    inline GgQuaternion& operator=(const GgQuaternion& q)
+    inline GgQuaternion& operator=(const GgVector& v)
     {
-      return operator=(q.quaternion.data());
+      return load(v);
     }
     inline GgQuaternion& operator+=(const GLfloat* a)
     {
       return loadAdd(a);
     }
+    inline GgQuaternion& operator+=(const GgVector& v)
+    {
+      return loadAdd(v);
+    }
     inline GgQuaternion& operator+=(const GgQuaternion& q)
     {
-      return operator+=(q.quaternion.data());
+      return loadAdd(q);
     }
     inline GgQuaternion& operator-=(const GLfloat* a)
     {
       return loadSubtract(a);
     }
+    inline GgQuaternion& operator-=(const GgVector& v)
+    {
+      return loadSubtract(v);
+    }
     inline GgQuaternion& operator-=(const GgQuaternion& q)
     {
-      return operator-=(q.quaternion.data());
+      return operator-=(q.data());
     }
     inline GgQuaternion& operator*=(const GLfloat* a)
     {
       return loadMultiply(a);
     }
+    inline GgQuaternion& operator*=(const GgVector& v)
+    {
+      return loadMultiply(v);
+    }
     inline GgQuaternion& operator*=(const GgQuaternion& q)
     {
-      return operator*=(q.quaternion.data());
+      return operator*=(q.data());
     }
     inline GgQuaternion& operator/=(const GLfloat* a)
     {
       return loadDivide(a);
     }
+    inline GgQuaternion& operator/=(const GgVector& v)
+    {
+      return loadDivide(v);
+    }
     inline GgQuaternion& operator/=(const GgQuaternion& q)
     {
-      return operator/=(q.quaternion.data());
+      return operator/=(q.data());
     }
     inline GgQuaternion operator+(const GLfloat* a) const
     {
       return add(a);
     }
+    inline GgQuaternion operator+(const GgVector& v) const
+    {
+      return add(v);
+    }
     inline GgQuaternion operator+(const GgQuaternion& q) const
     {
-      return operator+(q.quaternion.data());
+      return operator+(q.data());
     }
     inline GgQuaternion operator-(const GLfloat* a) const
     {
       return add(a);
     }
+    inline GgQuaternion operator-(const GgVector& v) const
+    {
+      return add(v);
+    }
     inline GgQuaternion operator-(const GgQuaternion& q) const
     {
-      return operator-(q.quaternion.data());
+      return operator-(q.data());
     }
     inline GgQuaternion operator*(const GLfloat* a) const
     {
       return multiply(a);
     }
+    inline GgQuaternion operator*(const GgVector& v) const
+    {
+      return multiply(v);
+    }
     inline GgQuaternion operator*(const GgQuaternion& q) const
     {
-      return operator*(q.quaternion.data());
+      return operator*(q.data());
     }
     inline GgQuaternion operator/(const GLfloat* a) const
     {
       return divide(a);
     }
+    inline GgQuaternion operator/(const GgVector& v) const
+    {
+      return divide(v);
+    }
     inline GgQuaternion operator/(const GgQuaternion& q) const
     {
-      return operator/(q.quaternion.data());
+      return operator/(q.data());
     }
 
     //! \brief 回転の変換行列を表す四元数を格納する.
@@ -3283,7 +3694,7 @@ namespace gg
     //!   \return a による回転の変換に相当する四元数.
     inline GgQuaternion& loadMatrix(const GLfloat* a)
     {
-      toQuaternion(quaternion.data(), a);
+      toQuaternion(data(), a);
       return *this;
     }
 
@@ -3436,7 +3847,7 @@ namespace gg
     //!   \return 格納した a, b を t で内分した四元数.
     inline GgQuaternion& loadSlerp(const GLfloat* a, const GLfloat* b, GLfloat t)
     {
-      slerp(quaternion.data(), a, b, t);
+      slerp(data(), a, b, t);
       return *this;
     }
 
@@ -3447,7 +3858,7 @@ namespace gg
     //!   \return 格納した q, r を t で内分した四元数.
     inline GgQuaternion& loadSlerp(const GgQuaternion& q, const GgQuaternion& r, GLfloat t)
     {
-      return loadSlerp(q.quaternion.data(), r.quaternion.data(), t);
+      return loadSlerp(q.data(), r.data(), t);
     }
 
     //! \brief 球面線形補間の結果を格納する.
@@ -3457,7 +3868,7 @@ namespace gg
     //!   \return 格納した q, a を t で内分した四元数.
     inline GgQuaternion& loadSlerp(const GgQuaternion& q, const GLfloat* a, GLfloat t)
     {
-      return loadSlerp(q.quaternion.data(), a, t);
+      return loadSlerp(q.data(), a, t);
     }
 
     //! \brief 球面線形補間の結果を格納する.
@@ -3467,7 +3878,7 @@ namespace gg
     //!   \return 格納した a, q を t で内分した四元数.
     inline GgQuaternion& loadSlerp(const GLfloat* a, const GgQuaternion& q, GLfloat t)
     {
-      return loadSlerp(a, q.quaternion.data(), t);
+      return loadSlerp(a, q.data(), t);
     }
 
     //! \brief 引数に指定した四元数を正規化して格納する.
@@ -3480,7 +3891,7 @@ namespace gg
     //!   \return 正規化された四元数.
     inline GgQuaternion& loadNormalize(const GgQuaternion& q)
     {
-      return loadNormalize(q.quaternion.data());
+      return loadNormalize(q.data());
     }
 
     //! \brief 引数に指定した四元数の共役四元数を格納する.
@@ -3493,7 +3904,7 @@ namespace gg
     //!   \return 共役四元数.
     inline GgQuaternion& loadConjugate(const GgQuaternion& q)
     {
-      return loadConjugate(q.quaternion.data());
+      return loadConjugate(q.data());
     }
 
     //! \brief 引数に指定した四元数の逆元を格納する.
@@ -3506,7 +3917,7 @@ namespace gg
     //!   \return 四元数の逆元.
     inline GgQuaternion& loadInvert(const GgQuaternion& q)
     {
-      return loadInvert(q.quaternion.data());
+      return loadInvert(q.data());
     }
 
     //! \brief 球面線形補間の結果を返す.
@@ -3516,7 +3927,7 @@ namespace gg
     inline GgQuaternion slerp(GLfloat* a, GLfloat t) const
     {
       GgQuaternion p;
-      slerp(p.quaternion.data(), quaternion.data(), a, t);
+      slerp(p.data(), data(), a, t);
       return p;
     }
 
@@ -3527,7 +3938,7 @@ namespace gg
     inline GgQuaternion slerp(const GgQuaternion& q, GLfloat t) const
     {
       GgQuaternion p;
-      slerp(p.quaternion.data(), quaternion.data(), q.quaternion.data(), t);
+      slerp(p.data(), data(), q.data(), t);
       return p;
     }
 
@@ -3536,7 +3947,7 @@ namespace gg
     inline GgQuaternion normalize() const
     {
       GgQuaternion q;
-      q.loadNormalize(quaternion.data());
+      q.loadNormalize(data());
       return q;
     }
 
@@ -3545,7 +3956,7 @@ namespace gg
     inline GgQuaternion conjugate() const
     {
       GgQuaternion q;
-      q.loadConjugate(quaternion.data());
+      q.loadConjugate(data());
       return q;
     }
 
@@ -3554,39 +3965,32 @@ namespace gg
     inline GgQuaternion invert() const
     {
       GgQuaternion q;
-      q.loadInvert(quaternion.data());
+      q.loadInvert(data());
       return q;
-    }
-
-    //! \brief 四元数を取り出す.
-    //!   \return 四元数を表す GLfloat 型の 4 要素の配列変数.
-    inline const GLfloat* get() const
-    {
-      return quaternion.data();
     }
 
     //! \brief 四元数を取り出す.
     //!   \param a 四元数を格納する GLfloat 型の 4 要素の配列変数.
     inline void get(GLfloat* a) const
     {
-      a[0] = quaternion[0];
-      a[1] = quaternion[1];
-      a[2] = quaternion[2];
-      a[3] = quaternion[3];
+      a[0] = (*this)[0];
+      a[1] = (*this)[1];
+      a[2] = (*this)[2];
+      a[3] = (*this)[3];
     }
 
     //! \brief 四元数が表す回転の変換行列を a に求める.
     //!   \param a 回転の変換行列を格納する GLfloat 型の 16 要素の配列変数.
     inline void getMatrix(GLfloat* a) const
     {
-      toMatrix(a, quaternion.data());
+      toMatrix(a, data());
     }
 
     //! \brief 四元数が表す回転の変換行列を m に求める.
     //!   \param m 回転の変換行列を格納する GgMatrix 型の変数.
     inline void getMatrix(GgMatrix& m) const
     {
-      getMatrix(m.array.data());
+      getMatrix(m.data());
     }
 
     //! \brief 四元数が表す回転の変換行列を取り出す.
@@ -3603,15 +4007,15 @@ namespace gg
     inline void getConjugateMatrix(GLfloat* a) const
     {
       GgQuaternion c;
-      c.loadConjugate(quaternion.data());
-      toMatrix(a, c.quaternion.data());
+      c.loadConjugate(data());
+      toMatrix(a, c.data());
     }
 
     //! \brief 四元数の共役が表す回転の変換行列を m に求める.
     //!   \param m 回転の変換行列を格納する GgMatrix 型の変数.
     inline void getConjugateMatrix(GgMatrix& m) const
     {
-      getConjugateMatrix(m.array.data());
+      getConjugateMatrix(m.data());
     }
 
     //! \brief 四元数の共役が表す回転の変換行列を取り出す.
@@ -3624,7 +4028,7 @@ namespace gg
     }
   };
 
-  //! \brief 四元数を返す
+  //! \brief 四元数を返す.
   //!   \param x 四元数の x 要素.
   //!   \param y 四元数の y 要素.
   //!   \param z 四元数の z 要素.
@@ -3636,7 +4040,7 @@ namespace gg
     return q.load(x, y, z, w);
   }
 
-  //! \brief 四元数を返す
+  //! \brief 四元数を返す.
   //!   \param a GLfloat 型の GLfloat 型の 4 要素の配列変数に格納した四元数.
   //!   \return 四元数.
   inline GgQuaternion ggQuaternion(const GLfloat* a)
@@ -3644,7 +4048,7 @@ namespace gg
     return ggQuaternion(a[0], a[1], a[2], a[3]);
   }
 
-  //! \brief 単位四元数を返す
+  //! \brief 単位四元数を返す.
   //! \return 単位四元数.
   inline GgQuaternion ggIdentityQuaternion()
   {
@@ -3757,7 +4161,7 @@ namespace gg
   //!   \return q, r を t で内分した四元数.
   inline GgQuaternion ggSlerp(const GgQuaternion& q, const GgQuaternion& r, GLfloat t)
   {
-    return ggSlerp(q.get(), r.get(), t);
+    return ggSlerp(q.data(), r.data(), t);
   }
 
   //! \brief 二つの四元数の球面線形補間の結果を返す.
@@ -3767,7 +4171,7 @@ namespace gg
   //!   \return q, a を t で内分した四元数.
   inline GgQuaternion ggSlerp(const GgQuaternion& q, const GLfloat* a, GLfloat t)
   {
-    return ggSlerp(q.get(), a, t);
+    return ggSlerp(q.data(), a, t);
   }
 
   //! \brief 二つの四元数の球面線形補間の結果を返す.
@@ -3777,7 +4181,7 @@ namespace gg
   //!   \return a, q を t で内分した四元数.
   inline GgQuaternion ggSlerp(const GLfloat* a, const GgQuaternion& q, GLfloat t)
   {
-    return ggSlerp(a, q.get(), t);
+    return ggSlerp(a, q.data(), t);
   }
 
   //! \brief 四元数のノルムを返す.
@@ -3815,26 +4219,34 @@ namespace gg
   /*!
   ** \brief 簡易トラックボール処理.
   */
-  class GgTrackball
+  class GgTrackball : public GgQuaternion
   {
     bool drag;        // ドラッグ中か否か
     GLfloat start[2]; // ドラッグ開始位置
     GLfloat scale[2]; // マウスの絶対位置→ウィンドウ内での相対位置の換算係数
     GgQuaternion cq;  // 回転の初期値 (四元数)
-    GgQuaternion tq;  // ドラッグ中の回転 (四元数)
     GgMatrix rt;      // 回転の変換行列
 
   public:
 
     //! \brief コンストラクタ.
-    GgTrackball()
+    //1   \param q トラックボールの回転の初期値の四元数.
+    GgTrackball(const GgQuaternion& q = ggIdentityQuaternion())
     {
-      reset();
+      reset(q);
     }
 
     //! \brief デストラクタ.
     virtual ~GgTrackball()
     {
+    }
+
+    //! \brief コンストラクタ.
+    //1   \param q トラックボールの回転の初期値の四元数.
+    GgTrackball& operator=(const GgQuaternion& q)
+    {
+      reset(q);
+      return *this;
     }
 
     //! \brief トラックボール処理するマウスの移動範囲を指定する.
@@ -3874,8 +4286,9 @@ namespace gg
     //!   \param y 現在のマウスの y 座標.
     void end(GLfloat x, GLfloat y);
 
-    //! \brief トラックボールをリセットする
-    void reset();
+    //! \brief トラックボールをリセットする.
+    //!   \param トラックボールの回転の初期値の四元数.
+    void reset(const GgQuaternion &q = ggIdentityQuaternion());
 
     //! \brief トラックボール処理の開始位置を取り出す.
     //!   \return トラックボールの開始位置のポインタ.
@@ -3925,7 +4338,7 @@ namespace gg
     //!   \return 回転の変換を表す Quaternion 型の四元数.
     inline const GgQuaternion& getQuaternion() const
     {
-      return tq;
+      return *this;
     }
 
     //! \brief 現在の回転の変換行列を取り出す.
@@ -4813,8 +5226,11 @@ namespace gg
   */
   struct GgVertex
   {
-    GgVector position;  //! 位置.
-    GgVector normal;    //! 法線.
+    //! 位置.
+    GgVector position;
+
+    //! 法線.
+    GgVector normal;
 
     //! \brief コンストラクタ.
     GgVertex()
@@ -5237,7 +5653,7 @@ namespace gg
     {
     }
 
-    //! \brief コンストラクタ
+    //! \brief コンストラクタ.
     //!   \param vert バーテックスシェーダのソースファイル名.
     //!   \param frag フラグメントシェーダのソースファイル名 (0 なら不使用).
     //!   \param geom ジオメトリシェーダのソースファイル名 (0 なら不使用).
@@ -5429,7 +5845,7 @@ namespace gg
       const char* const* varyings = nullptr
     )
     {
-      load(vert.c_str(), frag.c_str(), geom.c_str(), nvarying, varyings);
+      load(vert, frag, geom, nvarying, varyings);
     }
 
     //! \brief コピーコンストラクタ.
@@ -5446,7 +5862,7 @@ namespace gg
     {
     }
 
-    //! \brief 代入演算子
+    //! \brief 代入演算子.
     GgSimpleShader& operator=(const GgSimpleShader& o)
     {
       if (&o != this)
@@ -5719,7 +6135,7 @@ namespace gg
       }
 
       //! \brief 光源の色と位置を設定する.
-      //!   \param light 光源の特性の GgSimpleShader::Light 構造体のポインタ
+      //!   \param light 光源の特性の GgSimpleShader::Light 構造体のポインタ.
       //!   \param first 値を設定する光源データの最初の番号, デフォルトは 0.
       //!   \param count 値を設定する光源データの数, デフォルトは 1.
       void load(const Light* light, GLint first = 0, GLsizei count = 1) const
@@ -5728,7 +6144,7 @@ namespace gg
       }
 
       //! \brief 光源の色と位置を設定する.
-      //!   \param light 光源の特性の GgSimpleShader::Light 構造体
+      //!   \param light 光源の特性の GgSimpleShader::Light 構造体.
       //!   \param first 値を設定する光源データの最初の番号, デフォルトは 0.
       //!   \param count 値を設定する光源データの数, デフォルトは 1.
       void load(const Light& light, GLint first = 0, GLsizei count = 1) const
@@ -5791,7 +6207,7 @@ namespace gg
       {
       }
 
-      //! \brief デストラクタ
+      //! \brief デストラクタ.
       virtual ~MaterialBuffer()
     {
     }
@@ -6143,7 +6559,7 @@ namespace gg
 
     //! \brief 形状データの取り出し.
     //!   \return GgTriangles 型の形状データのポインタ.
-    const GgTriangles* get() const
+    inline const GgTriangles* get() const
     {
       return data.get();
     }
