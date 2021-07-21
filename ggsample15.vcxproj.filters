@@ -25,7 +25,7 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="ggsample15.cpp">
-      <Filter>シェーダー ファイル</Filter>
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -33,7 +33,10 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Window.h">
-      <Filter>シェーダー ファイル</Filter>
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="GgApp.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
