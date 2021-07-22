@@ -1,2 +1,0 @@
-gg.o: gg.cpp gg.h glext.h
-main.o: main.cpp gg.h glext.h
