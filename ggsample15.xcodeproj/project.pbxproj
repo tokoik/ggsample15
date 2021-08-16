@@ -7,22 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7D5C711826CAA17600850464 /* ggsample15.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D5C711526CAA17600850464 /* ggsample15.cpp */; };
 		7D7AF85F1222C8CC003A0434 /* gg.icns in Resources */ = {isa = PBXBuildFile; fileRef = 7D7AF85E1222C8CC003A0434 /* gg.icns */; };
 		7DC2DA61150E40FF007E9256 /* gg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7DC2DA5F150E40FF007E9256 /* gg.cpp */; };
 		7DC2DA63150E410D007E9256 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7DC2DA62150E410D007E9256 /* main.cpp */; };
-		7DC2DA66150E4126007E9256 /* simple.frag in Resources */ = {isa = PBXBuildFile; fileRef = 7DC2DA64150E411E007E9256 /* simple.frag */; };
-		7DC2DA67150E4126007E9256 /* simple.vert in Resources */ = {isa = PBXBuildFile; fileRef = 7DC2DA65150E411E007E9256 /* simple.vert */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		7D1E90EE1123E36C005E6C75 /* ggsample15.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ggsample15.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D1E90F11123E36C005E6C75 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7D5C711526CAA17600850464 /* ggsample15.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = ggsample15.cpp; sourceTree = "<group>"; tabWidth = 2; };
+		7D5C711626CAA17600850464 /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Window.h; sourceTree = "<group>"; tabWidth = 2; };
+		7D5C711726CAA17600850464 /* GgApp.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GgApp.h; sourceTree = "<group>"; tabWidth = 2; };
 		7D7AF85E1222C8CC003A0434 /* gg.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = gg.icns; sourceTree = "<group>"; };
-		7DC2DA5F150E40FF007E9256 /* gg.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = gg.cpp; sourceTree = "<group>"; };
-		7DC2DA60150E40FF007E9256 /* gg.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = gg.h; sourceTree = "<group>"; };
+		7DC2DA5F150E40FF007E9256 /* gg.cpp */ = {isa = PBXFileReference; fileEncoding = 8; indentWidth = 2; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = gg.cpp; sourceTree = "<group>"; tabWidth = 2; };
+		7DC2DA60150E40FF007E9256 /* gg.h */ = {isa = PBXFileReference; fileEncoding = 8; indentWidth = 2; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = gg.h; sourceTree = "<group>"; tabWidth = 2; };
 		7DC2DA62150E410D007E9256 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = main.cpp; sourceTree = "<group>"; tabWidth = 2; };
-		7DC2DA64150E411E007E9256 /* simple.frag */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.glsl; lineEnding = 0; path = simple.frag; sourceTree = "<group>"; };
-		7DC2DA65150E411E007E9256 /* simple.vert */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.glsl; lineEnding = 0; path = simple.vert; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,11 +39,12 @@
 		7D1E90D81123E2F7005E6C75 = {
 			isa = PBXGroup;
 			children = (
+				7D5C711526CAA17600850464 /* ggsample15.cpp */,
 				7DC2DA62150E410D007E9256 /* main.cpp */,
+				7D5C711726CAA17600850464 /* GgApp.h */,
+				7D5C711626CAA17600850464 /* Window.h */,
 				7DC2DA60150E40FF007E9256 /* gg.h */,
 				7DC2DA5F150E40FF007E9256 /* gg.cpp */,
-				7DC2DA65150E411E007E9256 /* simple.vert */,
-				7DC2DA64150E411E007E9256 /* simple.frag */,
 				7D1E90EF1123E36C005E6C75 /* Products */,
 				7D1E90F11123E36C005E6C75 /* Info.plist */,
 				7D7AF85E1222C8CC003A0434 /* gg.icns */,
@@ -112,8 +113,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7DC2DA66150E4126007E9256 /* simple.frag in Resources */,
-				7DC2DA67150E4126007E9256 /* simple.vert in Resources */,
 				7D7AF85F1222C8CC003A0434 /* gg.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -126,6 +125,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7DC2DA61150E40FF007E9256 /* gg.cpp in Sources */,
+				7D5C711826CAA17600850464 /* ggsample15.cpp in Sources */,
 				7DC2DA63150E410D007E9256 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
