@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7D4B7F0326F8BA4D00A17DB7 /* simple.frag in Resources */ = {isa = PBXBuildFile; fileRef = 7D4B7F0126F8BA4D00A17DB7 /* simple.frag */; };
+		7D4B7F0426F8BA4D00A17DB7 /* simple.vert in Resources */ = {isa = PBXBuildFile; fileRef = 7D4B7F0226F8BA4D00A17DB7 /* simple.vert */; };
+		7D4B7F0626F8BAF300A17DB7 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 7D4B7F0526F8BAF300A17DB7 /* README.md */; };
 		7D5C711826CAA17600850464 /* ggsample15.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D5C711526CAA17600850464 /* ggsample15.cpp */; };
 		7D7AF85F1222C8CC003A0434 /* gg.icns in Resources */ = {isa = PBXBuildFile; fileRef = 7D7AF85E1222C8CC003A0434 /* gg.icns */; };
 		7DC2DA61150E40FF007E9256 /* gg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7DC2DA5F150E40FF007E9256 /* gg.cpp */; };
@@ -16,6 +19,9 @@
 /* Begin PBXFileReference section */
 		7D1E90EE1123E36C005E6C75 /* ggsample15.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ggsample15.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D1E90F11123E36C005E6C75 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7D4B7F0126F8BA4D00A17DB7 /* simple.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = simple.frag; sourceTree = "<group>"; };
+		7D4B7F0226F8BA4D00A17DB7 /* simple.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = simple.vert; sourceTree = "<group>"; };
+		7D4B7F0526F8BAF300A17DB7 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		7D5C711526CAA17600850464 /* ggsample15.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = ggsample15.cpp; sourceTree = "<group>"; tabWidth = 2; };
 		7D5C711626CAA17600850464 /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Window.h; sourceTree = "<group>"; tabWidth = 2; };
 		7D5C711726CAA17600850464 /* GgApp.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GgApp.h; sourceTree = "<group>"; tabWidth = 2; };
@@ -45,9 +51,12 @@
 				7D5C711626CAA17600850464 /* Window.h */,
 				7DC2DA60150E40FF007E9256 /* gg.h */,
 				7DC2DA5F150E40FF007E9256 /* gg.cpp */,
+				7D4B7F0226F8BA4D00A17DB7 /* simple.vert */,
+				7D4B7F0126F8BA4D00A17DB7 /* simple.frag */,
 				7D1E90EF1123E36C005E6C75 /* Products */,
 				7D1E90F11123E36C005E6C75 /* Info.plist */,
 				7D7AF85E1222C8CC003A0434 /* gg.icns */,
+				7D4B7F0526F8BAF300A17DB7 /* README.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -114,6 +123,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D7AF85F1222C8CC003A0434 /* gg.icns in Resources */,
+				7D4B7F0426F8BA4D00A17DB7 /* simple.vert in Resources */,
+				7D4B7F0626F8BAF300A17DB7 /* README.md in Resources */,
+				7D4B7F0326F8BA4D00A17DB7 /* simple.frag in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -219,17 +231,26 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
+				HEADER_SEARCH_PATHS = $PROJECT_DIR/include;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = $PROJECT_DIR/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				OTHER_LDFLAGS = (
-					"-framework",
-					GLUT,
+					"-lglfw3_macos",
 					"-framework",
 					OpenGL,
+					"-framework",
+					CoreVideo,
+					"-framework",
+					IOKit,
+					"-framework",
+					Cocoa,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.yourcompany.${PRODUCT_NAME:identifier}";
 				PRODUCT_NAME = ggsample15;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Debug;
 		};
@@ -246,17 +267,26 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
+				HEADER_SEARCH_PATHS = $PROJECT_DIR/include;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = $PROJECT_DIR/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				OTHER_LDFLAGS = (
-					"-framework",
-					GLUT,
+					"-lglfw3_macos",
 					"-framework",
 					OpenGL,
+					"-framework",
+					CoreVideo,
+					"-framework",
+					IOKit,
+					"-framework",
+					Cocoa,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.yourcompany.${PRODUCT_NAME:identifier}";
 				PRODUCT_NAME = ggsample15;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "";
 				ZERO_LINK = NO;
 			};
 			name = Release;

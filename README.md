@@ -4,6 +4,8 @@
 ([gg.h](gg.h), [gg.cpp](gg.cpp), および [Window.h](Window.h)) を使った、
 OpenGL プログラミングのガイドです。
 
+## はじめに
+
 [ゲームグラフィックス特論](https://tokoik.github.io/gg/) では、宿題に [OpenGL](https://www.opengl.org/) を使ったグラフィックスプログラミングを課しています。この宿題プログラムでは、Linux (gcc 9.3.0)、Windows (Visual Studio 2019)、macOS (Xcode 12) に対応するために、クロスプラットフォームのフレームワークである [GLFW](https://www.glfw.org/) を使用しています。GLFW は各プラットフォームのキーボードやマウス、ウィンドウ等とのインタフェースを提供し、OpenGL の API が使用できるようにお膳立てをしてくれます。しかし、これだけで OpenGL によるグラフィックスプログラミングをするのは、まだちょっと手間がかかります。
 
 そのために [openFrameworks](https://openframeworks.cc/ja/) のようなフレームワーク、あるいは [Unity](https://unity.com/ja)、[Unreal Engine](https://www.unrealengine.com/ja/) といったミドルウェアが作られています。しかし、これらは OpenGL 自体を隠して使うようになっています。そのため、OpenGL 自体を勉強する、あるいはそれを使って研究するという目的では、これらもちょっと使いにくいように思います。
