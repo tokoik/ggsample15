@@ -1,0 +1,58 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+   "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="227px" height="227px">
+   <g id="cvpage1_top" width="227px" height="227px" transform="translate(0,0)">
+      <rect x="14.173px" y="14.173px" width="198.425px" height="198.425px" fill="#EBEBEB" fill-rule="nonzero" stroke="#000" />
+      <rect x="42.52px" y="42.52px" width="141.732px" height="141.732px" fill="#FFF" fill-rule="evenodd" stroke="none" />
+      <polygon points="79.687,102.436 100.53,117.563 113.386,126.903 134.213,142.052 126.241,117.563 121.331,102.45 113.386,77.953 105.441,102.45 100.53,117.563 92.559,142.052 113.386,126.903 126.241,117.563 147.085,102.436 121.331,102.45 105.441,102.45 79.687,102.436 " fill="none" stroke="#E30000" />
+      <line x1="137.745px" y1="42.418px" x2="137.745px" y2="42.418px" fill="#FF8E8E" fill-rule="nonzero" stroke="#8E0000" />
+      <rect x="42.52px" y="42.52px" width="141.732px" height="141.732px" fill="none" stroke="#000" />
+      <line x1="113.386px" y1="212.599px" x2="113.386px" y2="19.745px" fill="none" stroke="#000" />
+      <polygon points="113.386,14.173 115.694,19.745 111.078,19.745 113.386,14.173 " fill="#000" fill-rule="nonzero" stroke="#000" stroke-width="0.1px" />
+      <line x1="14.173px" y1="113.386px" x2="207.027px" y2="113.386px" fill="none" stroke="#000" />
+      <polygon points="212.599,113.386 207.027,115.694 207.027,111.078 212.599,113.386 " fill="#000" fill-rule="nonzero" stroke="#000" stroke-width="0.1px" />
+      <path d="M 114.803 77.953 C 114.803 78.735 114.168 79.37 113.386 79.37 C 112.604 79.37 111.969 78.735 111.969 77.953 C 111.969 77.171 112.604 76.535 113.386 76.535 C 114.168 76.535 114.803 77.171 114.803 77.953 " fill="#000" fill-rule="evenodd" stroke="none" />
+      <g transform="translate(99.213,28.346)" font-size="10px" font-family="Symbol, fantasy">
+         <text x="11.339px" y="10px" text-anchor="end">
+            1
+         </text>
+      </g>
+      <g transform="translate(184.252,113.386)" font-size="10px" font-family="Symbol, fantasy">
+         <text x="5.669px" y="12px" text-anchor="middle" baseline-shift="sub">
+            1
+         </text>
+      </g>
+      <g transform="translate(28.346,113.386)" font-size="10px" font-family="Symbol, fantasy">
+         <text x="11.339px" y="12px" text-anchor="end" baseline-shift="sub">
+            -1
+         </text>
+      </g>
+      <g transform="translate(99.213,184.252)" font-size="10px" font-family="Symbol, fantasy">
+         <text x="11.339px" y="12px" text-anchor="end" baseline-shift="sub">
+            -1
+         </text>
+      </g>
+      <g transform="translate(102.047,113.386)" font-size="10px" font-family="'Times New Roman', serif">
+         <text x="0px" y="11px" baseline-shift="sub">
+            O
+         </text>
+      </g>
+      <g transform="translate(187.087,99.213)" font-size="10px" font-family="'Times New Roman', serif">
+         <text x="12.621px" y="9px" text-anchor="middle" font-style="oblique">
+            x<tspan font-style="normal"> / </tspan>w
+         </text>
+      </g>
+      <g transform="translate(85.04,14.173)" font-size="10px" font-family="'Times New Roman', serif">
+         <text x="14.039px" y="9px" text-anchor="middle" font-style="oblique">
+            y<tspan font-style="normal"> / </tspan>w
+         </text>
+      </g>
+      <g transform="translate(117.053,65.753)" font-size="10px" font-family="Symbol, fantasy">
+         <text x="0px" y="10px">
+            (0.5, 0, 0)
+         </text>
+      </g>
+   </g>
+</svg>
