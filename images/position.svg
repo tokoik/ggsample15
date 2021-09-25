@@ -6,7 +6,6 @@
    <g id="cvpage1_top" width="227px" height="227px" transform="translate(0,0)">
       <rect x="14.173px" y="14.173px" width="198.425px" height="198.425px" fill="#EBEBEB" fill-rule="nonzero" stroke="#000" />
       <rect x="42.52px" y="42.52px" width="141.732px" height="141.732px" fill="#FFF" fill-rule="evenodd" stroke="none" />
-      <rect x="77.953px" y="77.953px" width="70.866px" height="70.866px" fill="#C70000" fill-rule="evenodd" stroke="none" />
       <rect x="42.52px" y="42.52px" width="141.732px" height="141.732px" fill="none" stroke="#000" />
       <line x1="113.386px" y1="212.599px" x2="113.386px" y2="19.745px" fill="none" stroke="#000" />
       <polygon points="113.386,14.173 115.694,19.745 111.078,19.745 113.386,14.173 " fill="#000" fill-rule="nonzero" stroke="#000" stroke-width="0.1px" />
@@ -41,14 +40,14 @@
             O
          </text>
       </g>
-      <g transform="translate(187.087,99.213)" font-size="10px" font-family="'Times New Roman', serif">
-         <text x="12.621px" y="9px" text-anchor="middle" font-style="oblique">
-            x<tspan font-style="normal"> / </tspan>w
+      <g transform="translate(198.733,99.213)" font-size="10px" font-family="'Times New Roman', serif">
+         <text x="7.087px" y="9px" text-anchor="middle" font-style="oblique">
+            x
          </text>
       </g>
-      <g transform="translate(85.04,14.173)" font-size="10px" font-family="'Times New Roman', serif">
-         <text x="14.039px" y="9px" text-anchor="middle" font-style="oblique">
-            y<tspan font-style="normal"> / </tspan>w
+      <g transform="translate(99.213,14.173)" font-size="10px" font-family="'Times New Roman', serif">
+         <text x="7.087px" y="9px" text-anchor="middle" font-style="oblique">
+            y
          </text>
       </g>
       <g transform="translate(129.919,61.931)" font-size="10px" font-family="Symbol, fantasy">

@@ -8,7 +8,7 @@ OpenGL プログラミングのガイドです。
 
 ### ゲームグラフィックス特論の補助プログラム
 
-ゲームグラフィックス特論では、宿題にグラフィックス API (Application Program Interface) の一つである [OpenGL](https://www.opengl.org/) を使った、グラフィックスプログラミングを課しています。この宿題プログラムでは Linux (gcc 9.3.0)、Windows (Visual Studio 2019)、macOS (Xcode 12) に対応するために、クロスプラットフォームのフレームワークである [GLFW](https://www.glfw.org/) を使用しています。GLFW は各プラットフォームにおけるウィンドウの作成や操作、キーボード・マウス等とのインタフェースなどを提供し、OpenGL の API が使用できるようにお膳立てをしてくれます。しかし、これだけでグラフィックスプログラミングをするのは、まだちょっと手間がかかります。
+ゲームグラフィックス特論では、宿題にグラフィックス API (Application Program Interface, アプリケーションプログラムからプラットフォームの機能を利用する仕組み) の一つである [OpenGL](https://www.opengl.org/) を使った、グラフィックスプログラミングを課しています。この宿題プログラムでは Linux (gcc 9.3.0)、Windows (Visual Studio 2019)、macOS (Xcode 12) に対応するために、クロスプラットフォームのフレームワークである [GLFW](https://www.glfw.org/) を使用しています。GLFW は各プラットフォームにおけるウィンドウの作成や操作、キーボード・マウス等とのインタフェースなどを提供し、OpenGL の API が使用できるようにお膳立てをしてくれます。しかし、これだけでグラフィックスプログラミングをするのは、まだちょっと手間がかかります。
 
 もっと手軽にグラフィックスプログラミングをするには、[openFrameworks](https://openframeworks.cc/ja/) のようなフレームワークや、[Unity](https://unity.com/ja)、[Unreal Engine](https://www.unrealengine.com/ja/) などのミドルウェアが使えます。しかし、これらは OpenGL（の他、 [Vulkan](https://www.vulkan.org/)、[DirectX](https://docs.microsoft.com/ja-jp/windows/win32/directx)、[METAL](https://developer.apple.com/jp/metal/) などの低レベル API）自体を隠して使うようになっています。そのため、OpenGL 自体の勉強が目的である、あるいは、それを使って研究するという用途では、これらもちょっと使いにくいように思います。
 
@@ -166,9 +166,9 @@ GPU が描画する図形の頂点ごとのデータ（位置、色、法線な�
 * [glGenBuffers()](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGenBuffers.xhtml)
 * [glBindBuffer()](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBindBuffer.xhtml)
 
-この VBO のメモリを確保して、そこに頂点属性のデータを転送します。図形は下図に示す折れ線です。この各頂点の頂点属性は、2 次元平面上の 4 点の座標値です。なお、これはシェーダにおいて z = 0、w = 1 の同次座標として扱われます。
+この VBO のメモリを確保して、そこに頂点属性のデータを転送します。頂点属性は下図に示す 2 次元平面上の 4 点の座標値です。これは OpenGL の内部において z = 0、w = 1 の同次座標として扱われます。
 
-![折れ線のデータ](images/polyline.svg)
+![頂点のデータ](images/position.svg)
 
 ```cpp
   // 座標データ
@@ -254,7 +254,7 @@ GPU が描画する図形の頂点ごとのデータ（位置、色、法線な�
     glBindVertexArray(vao);
 ```
 
-描画を実行します。この処理はドローコール (Draw Call) と呼ばれます。ドローコールの処理は GPU 側で実行されます。
+描画を実行します。ここでは基本図形に `GL_LINE_STRIP` を指定して、その頂点に VBO に格納されている頂点の 0 番目（先頭）から 4 つを使います。
 
 ```cpp
     // 図形を描画する
@@ -262,6 +262,16 @@ GPU が描画する図形の頂点ごとのデータ（位置、色、法線な�
 ```
 
 * [glDrawArrays()](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glDrawArrays.xhtml)
+
+これは下図のような折れ線を描きます。
+
+![描画する折れ線](images/linestrip.svg)
+
+基本図形には、他にも次のようなものがあります。
+
+![基本図形](images/primitives.svg)
+
+これはドローコール (Draw Call) と呼ばれます。ドローコールにより GPU が図形の描画処理を開始します。シェーダはこのときに実行されます。
 
 ![シェーダの実行](images/GPU5.svg)
 
@@ -298,9 +308,8 @@ GPU が描画する図形の頂点ごとのデータ（位置、色、法線な�
 
    ![星を描く](images/star.svg)
 
-2. この図形は `GL_LINE_STRIP` という基本図形を用いて描いています。基本図形には、他にも次のようなものがあります。このうちの `GL_TRIANGLE_STRIP` を使って、その下に示す塗りつぶした矩形を描いてください。
+2. 基本図形に `GL_TRIANGLE_FAN` を使って、下に示す塗りつぶした矩形を描いてください。
 
-   ![基本図形](images/primitives.svg)
    ![塗りつぶした矩形](images/quad.svg)
 
-3. 基本図形に `GL_TRIANGLE_FAN` を使って、2. と同じ矩形を描いてください。
+3. 基本図形に `GL_TRIANGLE_STRIP` を使って、2. と同じ矩形を描いてください。
