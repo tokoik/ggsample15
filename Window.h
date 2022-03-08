@@ -39,12 +39,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //#define GG_USE_OCULUS_RIFT
 
 // 使用するマウスのボタン数
-#ifndef GG_BUTTON_COUNT
+#if !defined(GG_BUTTON_COUNT)
 #  define GG_BUTTON_COUNT 3
 #endif
 
 // 使用するユーザインタフェースの数
-#ifndef GG_INTERFACE_COUNT
+#if !defined(GG_INTERFACE_COUNT)
 #  define GG_INTERFACE_COUNT 5
 #endif
 
@@ -60,15 +60,15 @@ using namespace gg;
 #include <iostream>
 
 // ImGui の組み込み
-#ifdef GG_USE_IMGUI
+#if defined(GG_USE_IMGUI)
 #  include "imgui.h"
 #  include "imgui_impl_glfw.h"
 #  include "imgui_impl_opengl3.h"
 #endif
 
 // Oculus Rift SDK ライブラリ (LibOVR) の組み込み
-#ifdef GG_USE_OCULUS_RIFT
-#  ifdef _MSC_VER
+#if defined(GG_USE_OCULUS_RIFT)
+#  if defined(_MSC_VER)
 #    define GLFW_EXPOSE_NATIVE_WIN32
 #    define GLFW_EXPOSE_NATIVE_WGL
 #    include <GLFW/glfw3native.h>
@@ -212,7 +212,7 @@ class Window
   //
   static void keyboard(GLFWwindow* window, int key, int scancode, int action, int mods)
   {
-#ifdef IMGUI_VERSION
+#if defined(IMGUI_VERSION)
     // ImGui がキーボードを使うときはキーボードの処理を行わない
     if (ImGui::GetIO().WantCaptureKeyboard) return;
 #endif
@@ -301,7 +301,7 @@ class Window
   //
   static void mouse(GLFWwindow* window, int button, int action, int mods)
   {
-#ifdef IMGUI_VERSION
+#if defined(IMGUI_VERSION)
     // ImGui がマウスを使うときは Window クラスのマウス位置を更新しない
     if (ImGui::GetIO().WantCaptureMouse) return;
 #endif
@@ -346,7 +346,7 @@ class Window
   //
   static void wheel(GLFWwindow* window, double x, double y)
   {
-#ifdef IMGUI_VERSION
+#if defined(IMGUI_VERSION)
     // ImGui がマウスを使うときは Window クラスのマウス位置を更新しない
     if (ImGui::GetIO().WantCaptureMouse) return;
 #endif
@@ -377,7 +377,7 @@ class Window
   //
   static void glfwErrorCallback(int error, const char* description)
   {
-#ifdef __aarch64__
+#if defined(__aarch64__)
     if (error == 65544) return;
 #endif
     throw std::runtime_error(description);
@@ -407,6 +407,12 @@ public:
     // 後始末を登録する
     atexit(glfwTerminate);
 
+#if defined(GL_GLES_PROTOTYPES)
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
+    glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_EGL_CONTEXT_API);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+#else
     // OpenGL の major 番号が指定されていれば
     if (major > 0)
     {
@@ -422,13 +428,14 @@ public:
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
       }
     }
+#endif
 
-#ifdef GG_USE_OCULUS_RIFT
+#if defined(GG_USE_OCULUS_RIFT)
     // Oculus Rift では SRGB でレンダリングする
     glfwWindowHint(GLFW_SRGB_CAPABLE, GL_TRUE);
 #endif
 
-#ifdef IMGUI_VERSION
+#if defined(IMGUI_VERSION)
     // ImGui のバージョンをチェックする
     IMGUI_CHECKVERSION();
 
@@ -509,7 +516,7 @@ public:
     // ウィンドウのサイズ変更時に呼び出す処理を登録する
     glfwSetFramebufferSizeCallback(window, resize);
 
-#ifdef IMGUI_VERSION
+#if defined(IMGUI_VERSION)
     // Setup Platform/Renderer bindings
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(nullptr);
@@ -517,6 +524,9 @@ public:
 
     // 垂直同期タイミングに合わせる
     glfwSwapInterval(1);
+
+    // 実際のフレームバッファのサイズを取得する
+    glfwGetFramebufferSize(window, &width, &height);
 
     // ビューポートと投影変換行列を初期化する
     resize(window, width, height);
@@ -534,7 +544,7 @@ public:
     // ウィンドウが作成されていなければ戻る
     if (!window) return;
 
-#ifdef IMGUI_VERSION
+#if defined(IMGUI_VERSION)
     // Shutdown Platform/Renderer bindings
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -579,7 +589,7 @@ public:
     // 対象のユーザインタフェース
     auto& current_if{ interfaceData[interfaceNo] };
 
-#ifdef IMGUI_VERSION
+#if defined(IMGUI_VERSION)
 
     // ImGui の新規フレームを作成する
     ImGui_ImplOpenGL3_NewFrame();
@@ -622,7 +632,7 @@ public:
   //! \brief カラーバッファを入れ替える.
   void swapBuffers()
   {
-#ifdef IMGUI_VERSION
+#if defined(IMGUI_VERSION)
     // ImGui のフレームをレンダリングする
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 #endif
@@ -636,14 +646,14 @@ public:
 
   //! \brief ウィンドウの横幅を得る.
   //!   \return ウィンドウの横幅.
-  GLsizei getWidth() const
+  const GLsizei& getWidth() const
   {
     return size[0];
   }
 
   //! \brief ウィンドウの高さを得る.
   //!   \return ウィンドウの高さ.
-  GLsizei getHeight() const
+  const GLsizei& getHeight() const
   {
     return size[1];
   }
@@ -665,7 +675,7 @@ public:
 
   //! \brief ウィンドウのアスペクト比を得る.
   //!   \return ウィンドウの縦横比.
-  GLfloat getAspect() const
+  const GLfloat& getAspect() const
   {
     return aspect;
   }
@@ -680,7 +690,7 @@ public:
   //!   \return キーが押されていれば true.
   bool getKey(int key)
   {
-#ifdef IMGUI_VERSION
+#if defined(IMGUI_VERSION)
     // ImGui がキーボードを使うときはキーボードの処理を行わない
     if (ImGui::GetIO().WantCaptureKeyboard) return false;
 #endif
@@ -1042,7 +1052,7 @@ public:
   }
 };
 
-#ifdef GG_USE_OCULUS_RIFT
+#if defined(GG_USE_OCULUS_RIFT)
 /*!
 ** \brief Oculus Rift 関連の処理.
 **
@@ -1091,7 +1101,7 @@ class Oculus
   {
     ovrGraphicsLuid luid = ovrGraphicsLuid();
 
-#    ifdef _MSC_VER
+#    if defined(_MSC_VER)
     IDXGIFactory* factory{ nullptr };
 
     if (SUCCEEDED(CreateDXGIFactory(IID_PPV_ARGS(&factory))))
@@ -1211,7 +1221,7 @@ public:
     // Oculus Rift の情報を取り出す
     oculus.hmdDesc = ovr_GetHmdDesc(oculus.session);
 
-#  ifdef _DEBUG
+#  if defined(_DEBUG)
     // Oculus Rift の情報を表示する
     std::cerr
       << "\nProduct name: " << oculus.hmdDesc.ProductName
