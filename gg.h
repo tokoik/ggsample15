@@ -39,7 +39,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // フレームワークに GLFW 3 を使う
-#if defined(__RASPBERRY_PI__)
+#if defined(IMGUI_IMPL_OPENGL_ES2)
+#  define GLFW_INCLUDE_ES2
+#elif defined(IMGUI_IMPL_OPENGL_ES3)
 #  define GLFW_INCLUDE_ES3
 #else
 #  define GLFW_INCLUDE_GLCOREARB
@@ -4744,7 +4746,11 @@ namespace gg
     inline void* map() const
     {
       glBindBuffer(target, buffer);
+#if defined(GL_GLES_PROTOTYPES)
       return glMapBufferRange(target, 0, getStride() * count, GL_MAP_WRITE_BIT);
+#else
+      return glMapBuffer(target, GL_WRITE_ONLY);
+#endif
     }
 
     //! \brief バッファオブジェクトの指定した範囲をマップする.
@@ -4794,11 +4800,15 @@ namespace gg
 
       // データをバッファオブジェクトから抽出する
       glBindBuffer(target, buffer);
+#if defined(GL_GLES_PROTOTYPES)
       const GLsizeiptr begin{ getStride() * first };
       const GLsizeiptr range{ getStride() * count };
       T *const source{ glMapBufferRange(target, begin, range, GL_MAP_READ_BIT) };
       std::copy(source, source + count, data);
       glUnmapBuffer(target);
+#else
+      glGetBufferSubData(target, getStride() * first, getStride() * count, data);
+#endif
     }
 
     //! \brief 別のバッファオブジェクトからデータを複写する.
@@ -5062,13 +5072,13 @@ namespace gg
       {
         const char *const begin{ source + stride * i + offset };
         const char *const end{ begin + size };
-        std::copy(begin, end, destination + size * i);
+        std::copy(begin, end, destination + sizeof(T) * i);
       }
       glUnmapBuffer(target);
 #else
       for (GLsizei i = 0; i < count; ++i)
       {
-        glGetBufferSubData(target, stride * (first + i) + offset, size, destination + size * i);
+        glGetBufferSubData(target, stride * (first + i) + offset, size, destination + sizeof(T) * i);
       }
 #endif
     }
