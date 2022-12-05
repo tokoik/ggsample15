@@ -1,9 +1,9 @@
 TARGET	= ggsample15
-SOURCES	= $(wildcard *.cpp) $(wildcard lib/*.cpp)
-HEADERS	= $(wildcard *.h) $(wildcard lib/*.h)
+SOURCES	= $(wildcard *.cpp)
+HEADERS	= $(wildcard *.h)
 OBJECTS	= $(patsubst %.cpp,%.o,$(SOURCES))
-CXXFLAGS	= --std=c++17 -g -Wall -DDEBUG -DX11 -Iinclude
-LDLIBS	= `pkg-config glfw3 --libs` -ldl
+CXXFLAGS	= --std=c++17 -pthread -g -Wall -DDEBUG -DX11 -DPROJECT_NAME=\"$(TARGET)\" `pkg-config glfw3  --cflags`
+LDLIBS	= -ldl `pkg-config glfw3 --libs`
 
 .PHONY: clean
 
