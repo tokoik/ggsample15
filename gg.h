@@ -66,6 +66,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #    endif
 #    define GLFW3_CONFIGURATION "Debug"
 #  else
+#    if !defined(NDEBUG)
+#      define NDEBUG
+#    endif
 #    define GLFW3_CONFIGURATION "Release"
 #  endif
 // プラットフォームを調べる
@@ -1323,7 +1326,6 @@ extern PFNGLWINDOWRECTANGLESEXTPROC glWindowRectanglesEXT;
 #include <vector>
 #include <string>
 #include <memory>
-#include <cstddef>
 
 ///
 /// ゲームグラフィックス特論の宿題用補助プログラムの名前空間
