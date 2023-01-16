@@ -286,7 +286,7 @@ public:
     ///
     void restoreViewport() const
     {
-      glViewport(0, 0, fboSize[0], fboSize[1]);
+      if (!glfwGetWindowAttrib(window, GLFW_ICONIFIED)) glViewport(0, 0, fboSize[0], fboSize[1]);
     }
 
     ///
@@ -433,6 +433,7 @@ public:
     ///
     /// @param vx x 方向の移動速度.
     /// @param vy y 方向の移動速度.
+    /// @param vz z 方向の移動速度.
     ///
     void setVelocity(GLfloat vx, GLfloat vy, GLfloat vz = 0.1f)
     {
