@@ -65,7 +65,7 @@ using namespace gg;
 
 // Oculus Rift SDK ライブラリ (LibOVR) の組み込み
 #if defined(GG_USE_OCULUS_RIFT)
-#  if defined(_MSC_VER)
+#  if defined(_WIN32)
 #    define GLFW_EXPOSE_NATIVE_WIN32
 #    define GLFW_EXPOSE_NATIVE_WGL
 #    include <GLFW/glfw3native.h>

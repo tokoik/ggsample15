@@ -534,7 +534,7 @@ ovrGraphicsLuid GgApp::Oculus::GetDefaultAdapterLuid()
 {
   ovrGraphicsLuid luid = ovrGraphicsLuid();
 
-#    if defined(_MSC_VER)
+#    if defined(_WIN32)
   IDXGIFactory* factory{ nullptr };
 
   if (SUCCEEDED(CreateDXGIFactory(IID_PPV_ARGS(&factory))))
@@ -1151,7 +1151,11 @@ bool GgApp::Oculus::submit(bool mirror)
 }
 #endif
 
-#if !defined(_MSC_VER)
+#if defined(_WIN32)
+#  if !defined(_INC_WINDOWS) && !defined(_WINDOWS_)
+#    include <windows.h>
+#  endif
+#else
 #  include <pwd.h>
 #  include <unistd.h>
 #endif
@@ -1162,7 +1166,7 @@ std::string GgApp::getUsername()
 {
   // 環境変数からユーザ名を得る
   const char* user{
-#if defined(_MSC_VER)
+#if defined(_WIN32)
     std::getenv("USERNAME")
 #else
     std::getenv("USER")
@@ -1172,7 +1176,7 @@ std::string GgApp::getUsername()
   // 環境変数からユーザ名が得られたらそれを返す
   if (user) return user;
 
-#if defined(_MSC_VER)
+#if defined(_WIN32)
   // Win32 API を使ってユーザ名を得る
   char username[256];
   DWORD size{ sizeof(username) };
